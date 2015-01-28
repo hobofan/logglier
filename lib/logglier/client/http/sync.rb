@@ -56,7 +56,7 @@ module Logglier
               connect!
             end
 
-            @http.request_post(@input_uri.path, message, @headers)
+            @http.request_post(@input_uri.request_uri, message, @headers)
           rescue *RETRY_EXCEPTIONS => e
             @http = nil
             if retries < RETRIES
