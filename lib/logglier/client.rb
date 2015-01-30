@@ -60,12 +60,18 @@ module Logglier
       def formatter
         proc do |severity, datetime, progname, msg|
           if @format == :json && msg.is_a?(Hash)
+            msg.delete(:type) # type is set by url
+            msg.delete("type") # type is set by url
             MultiJson.dump(msg.merge({ :severity => severity,
                                        :datetime => datetime,
                                        :progname => progname }))
+          elsif @format == :json && msg.is_a?(String)
+            MultiJson.dump({ :message => msg,
+                             :severity => severity,
+                             :datetime => datetime,
+                             :progname => progname })
           else
-            message = "#{datetime} "
-            message << massage_message(msg, severity)
+            msg
           end
         end
       end
